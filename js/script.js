@@ -20,10 +20,18 @@ function timer() {
 
     timerInterval = setInterval(() => {
         timeRemaining--;
-        updateDisplay();
+        if (schedule === false) {
+            wupdateDisplay();
+        }
+
+        if (schedule === true) {
+            pupdateDisplay();
+        }
 
         if (timeRemaining === 0) {
             clearInterval(timerInterval);
+            schedule = true;
+            timer();
         }
     }, 1000); // set interval of action = every 1000 miliseconds = 1 second
 }
@@ -32,23 +40,28 @@ function handleReset() {
     
 }
 
-function updateDisplay() {
+function wupdateDisplay() {
     let minutes = Math.floor(timeRemaining / 60);
     let seconds = timeRemaining % 60;
 
-    if (schedule === false) {
+    if (timeRemaining !== 0) {
         wdisplay.textContent = (minutes) + ":" + (seconds);
         pdisplay.textContent = pomodoro.value;
     }
+}
 
-    schedule = true;
-    
-    if ((schedule === true) && (timeRemaining === 0)) {
-        wdisplay.textContent = "00:00"
+function pupdateDisplay() {
+    let minutes = Math.floor(timeRemaining / 60);
+    let seconds = timeRemaining % 60;
+
+    if (timeRemaining !== 0) {
         pdisplay.textContent = (minutes) + ":" + (seconds);
+        wdisplay.textContent = "0:0";
     }
 
-    schedule = false;
+    if (timeRemaining === 0) {
+        schedule = false;
+    }
 }
 
 action.addEventListener("click", timer)
