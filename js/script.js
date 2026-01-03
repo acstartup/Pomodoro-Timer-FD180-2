@@ -39,14 +39,16 @@ function updateDisplay() {
     if (schedule === false) {
         wdisplay.textContent = (minutes) + ":" + (seconds);
         pdisplay.textContent = pomodoro.value;
-        schedule = true;
     }
+
+    schedule = true;
     
     if ((schedule === true) && (timeRemaining === 0)) {
         wdisplay.textContent = "00:00"
         pdisplay.textContent = (minutes) + ":" + (seconds);
-        schedule = false;
     }
+
+    schedule = false;
 }
 
 action.addEventListener("click", timer)
