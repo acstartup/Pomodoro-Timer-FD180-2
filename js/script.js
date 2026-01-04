@@ -1,8 +1,9 @@
 // features needed:
-// timer stop
-// numbers reset
-// proper stop after pomodoro
-// loop amount (3x, 4x, etc...)
+// 1. numbers reset
+// 2. timer mid stop
+// 3. seperate start & stop
+// 4. proper stop after pomodoro
+// 5. loop amount (3x, 4x, etc...)
 
 let work = document.getElementById("work-input");
 let pomodoro = document.getElementById("pomodoro-input")
@@ -45,7 +46,8 @@ function timer() {
 }
 
 function handleReset() {
-    
+    work.value = "";
+    pomodoro.value = "";
 }
 
 function wupdateDisplay() {
