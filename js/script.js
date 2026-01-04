@@ -27,7 +27,6 @@ function timer() {
 
     if (stop === true) {
         timeRemaining = tempTimeRemaining;
-        tempTimeRemaining = 0;
         stop = false;
     }
 
