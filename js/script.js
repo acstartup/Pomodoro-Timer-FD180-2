@@ -1,7 +1,4 @@
 // features needed:
-// 2. timer mid stop
-// 3. seperate start & stop
-// 4. proper stop after pomodoro
 // 5. loop amount (3x, 4x, etc...)
 
 let work = document.getElementById("work-input");
@@ -16,8 +13,16 @@ let stop = false;
 let timeRemaining;
 let timerInterval = 0;
 let tempTimeRemaining = 0;
+let loopCount = 0;
+let loops = document.getElementById("loop-input");
+let loopDisplay = document.getElementById("loop-display");
 
 function timer() {
+    if (loopCount === 0) {
+        loopCount = loops.value;
+        loopDisplay.textContent = loopCount
+    }
+
     if ((timerInterval !== 0) && (stop === false)) {
         clearInterval(timerInterval);
         tempTimeRemaining = timeRemaining;
@@ -40,20 +45,25 @@ function timer() {
 
     timerInterval = setInterval(() => {
         timeRemaining--;
+        
         if (schedule === false) {
             wupdateDisplay();
+            loopDisplay.textContent = loopCount;
         }
-
-        if (schedule === true) {
+        else {
             pupdateDisplay();
         }
 
         if (timeRemaining === 0) {
             clearInterval(timerInterval);
             timerInterval = 0;
-            if (done === false) {
-                schedule = true;
+
+            if ((done === false) && (loopCount !== 0)) {
+                tempTimeRemaining = 0;
                 timer();
+            }
+            else {
+                alert("Pomodoro is up! Good work!");
             }
         }
     }, 1000); // set interval of action = every 1000 miliseconds = 1 second
@@ -62,8 +72,12 @@ function timer() {
 function handleReset() {
     work.value = "";
     pomodoro.value = "";
-    wdisplay = "";
-    pdisplay = "";
+    wdisplay.textContent = "";
+    pdisplay.textContent = "";
+    loops.value = "";
+    loopDisplay.textContent = "";
+    clearInterval(timerInterval);
+    timerInterval = 0;
 }
 
 function wupdateDisplay() {
@@ -73,6 +87,10 @@ function wupdateDisplay() {
     if (timeRemaining !== 0) {
         wdisplay.textContent = (minutes) + ":" + (seconds);
         pdisplay.textContent = pomodoro.value;
+    }
+
+    if (timeRemaining === 0) {
+        schedule = true;
     }
 }
 
@@ -87,8 +105,16 @@ function pupdateDisplay() {
 
     if (timeRemaining === 0) {
         pdisplay.textContent = "0:0";
-        schedule = false;
-        done = true;
+        loopCount--;
+        loopDisplay.textContent = loopCount;
+        
+        if (loopCount !== 0) {
+            schedule = false;
+        }
+        
+        if (loopCount === 0) {
+            done = true;
+        }
     }
 }
 
@@ -105,22 +131,6 @@ function edgeCaser() {
 
     timer();
 }
-
-/* function handleStop() {
-    if ((timerInterval !== 0) && (stop === false)) {
-        let tempInterval = timerInterval.value;
-        clearInterval(timerInterval);
-        stop = true;
-        return;
-    }
-
-    if (stop === true) {
-        timerInterval = tempInterval.value;
-        stop = false;
-    }
-}
-
-*/
 
 action.addEventListener("click", edgeCaser)
 reset.addEventListener("click", handleReset)
