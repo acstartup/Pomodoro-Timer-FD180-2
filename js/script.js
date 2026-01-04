@@ -68,6 +68,7 @@ function pupdateDisplay() {
     }
 
     if (timeRemaining === 0) {
+        pdisplay.textContent = "0:0";
         schedule = false;
         done = true;
     }
