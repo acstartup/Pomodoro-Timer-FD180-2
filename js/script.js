@@ -1,3 +1,9 @@
+// features needed:
+// timer stop
+// numbers reset
+// proper stop after pomodoro
+// loop amount (3x, 4x, etc...)
+
 let work = document.getElementById("work-input");
 let pomodoro = document.getElementById("pomodoro-input")
 let wdisplay = document.getElementById("work-display")
@@ -5,7 +11,9 @@ let pdisplay = document.getElementById("pomodoro-display")
 let action = document.getElementById("action")
 let reset = document.getElementById("reset")
 let schedule = false;
+let done = false;
 let timeRemaining;
+let timerInterval;
 
 function timer() {
     if (schedule === false) {
@@ -15,8 +23,6 @@ function timer() {
     if (schedule === true) {
         timeRemaining = pomodoro.value * 60;
     }
-    
-    let timerInterval;
 
     timerInterval = setInterval(() => {
         timeRemaining--;
@@ -30,8 +36,10 @@ function timer() {
 
         if (timeRemaining === 0) {
             clearInterval(timerInterval);
-            schedule = true;
-            timer();
+            if (done === false) {
+                schedule = true;
+                timer();
+            }
         }
     }, 1000); // set interval of action = every 1000 miliseconds = 1 second
 }
@@ -61,6 +69,7 @@ function pupdateDisplay() {
 
     if (timeRemaining === 0) {
         schedule = false;
+        done = true;
     }
 }
 
