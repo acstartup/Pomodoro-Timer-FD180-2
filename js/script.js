@@ -1,5 +1,4 @@
 // features needed:
-// 1. numbers reset
 // 2. timer mid stop
 // 3. seperate start & stop
 // 4. proper stop after pomodoro
@@ -13,15 +12,30 @@ let action = document.getElementById("action")
 let reset = document.getElementById("reset")
 let schedule = false;
 let done = false;
+let stop = false;
 let timeRemaining;
-let timerInterval;
+let timerInterval = 0;
+let tempTimeRemaining = 0;
 
 function timer() {
-    if (schedule === false) {
+    if ((timerInterval !== 0) && (stop === false)) {
+        clearInterval(timerInterval);
+        tempTimeRemaining = timeRemaining;
+        stop = true;
+        return;
+    }
+
+    if (stop === true) {
+        timeRemaining = tempTimeRemaining;
+        tempTimeRemaining = 0;
+        stop = false;
+    }
+
+    if ((schedule === false) && (tempTimeRemaining === 0)) {
         timeRemaining = work.value * 60;
     }
 
-    if (schedule === true) {
+    if ((schedule === true) && (tempTimeRemaining === 0)) {
         timeRemaining = pomodoro.value * 60;
     }
 
@@ -37,6 +51,7 @@ function timer() {
 
         if (timeRemaining === 0) {
             clearInterval(timerInterval);
+            timerInterval = 0;
             if (done === false) {
                 schedule = true;
                 timer();
@@ -48,6 +63,8 @@ function timer() {
 function handleReset() {
     work.value = "";
     pomodoro.value = "";
+    wdisplay = "";
+    pdisplay = "";
 }
 
 function wupdateDisplay() {
@@ -87,8 +104,24 @@ function edgeCaser() {
         return;
     }
 
-    timer()
+    timer();
 }
+
+/* function handleStop() {
+    if ((timerInterval !== 0) && (stop === false)) {
+        let tempInterval = timerInterval.value;
+        clearInterval(timerInterval);
+        stop = true;
+        return;
+    }
+
+    if (stop === true) {
+        timerInterval = tempInterval.value;
+        stop = false;
+    }
+}
+
+*/
 
 action.addEventListener("click", edgeCaser)
 reset.addEventListener("click", handleReset)
